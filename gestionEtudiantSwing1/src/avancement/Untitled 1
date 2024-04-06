@@ -1,0 +1,17 @@
+J'ai établi la connexion a la base de données
+prérequis:
+- mysql-connector-java-...
+- MySQL installé
+
+Tout d'abbord on crée une table et on y ajoute des données
+pour tester, tu peux utiliser la ligne de commande ou bien 
+un explorateur de BD dans mon cas c MySQL workbench
+
+Après, on crée un projet java et on y ajoute le connector
+->
+- click droit sur le projet et choisir 
+Build Path -> Configure Build Path -> Libraries (un peu au
+centre et en haut) apparament il faut choisir le tuc qui a
+le truc en dessus JRE system library -> add external jar 
+files -> choisir le jar file depuis l'explorateur de 
+fichiers -> apply et c bon
