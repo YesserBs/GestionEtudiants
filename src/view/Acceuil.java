@@ -24,15 +24,15 @@ public class Acceuil extends JFrame{
 	
 	public Acceuil() {
 		super("gestion des etudiants");
-		model.charger(personneC.getAllEtudiants());
+		model.charger(personneC.getAllPersonnes());
         setVisible(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 		
 		btn.addActionListener(e -> {
 			System.out.println("Hello");
-			personneC.ajouterEtudiant(new Personne("Ali", 28));
-			model.charger(personneC.getAllEtudiants());
+			personneC.ajouterPersonne(new Personne("Ali", 28));
+			model.charger(personneC.getAllPersonnes());
 		});
 		p.add(jsp, BorderLayout.CENTER);
 		p.add(btn, BorderLayout.SOUTH);

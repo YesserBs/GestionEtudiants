@@ -16,21 +16,48 @@ import java.util.List;
 import model.Personne;
 
 public class PersonneController{
+	
+	String url = "jdbc:mysql://localhost:3307/test?useSSL=false&requireSSL=true";
+	String user = "root"; // Nom d'utilisateur MySQL
+    String password = "admin"; // Mot de passe MySQL
 
-	private List<Personne> liste=new ArrayList<Personne>();
-	public void ajouterEtudiant(Personne e) {
-		liste.add(e);		
+
+    public void ajouterPersonne(Personne e) {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    try {
+
+	        // Établir la connexion à la base de données
+	        conn = DriverManager.getConnection(url, user, password);
+
+	        // Préparer la requête SQL
+	        String sql = "INSERT INTO personne (nom, age) VALUES (?, ?)";
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setString(1, e.getNom());
+	        stmt.setInt(2, e.getAge());
+
+	        // Exécuter la requête
+	        stmt.executeUpdate();
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    } finally {
+	        // Fermer les ressources
+	        try {
+	            if (stmt != null) stmt.close();
+	            if (conn != null) conn.close();
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
 	}
 
-	public List<Personne> getAllEtudiants() {
-		liste=new ArrayList<Personne>();
+
+	public List<Personne> getAllPersonnes() {
+		List<Personne> liste=new ArrayList<Personne>();
 		Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
 	    try {
-	    	String url = "jdbc:mysql://localhost:3307/test?useSSL=false&requireSSL=true";
-	    	String user = "root"; // Nom d'utilisateur MySQL
-	        String password = "admin"; // Mot de passe MySQL
 
 	        // Établir la connexion à la base de données
 	        conn = DriverManager.getConnection(url, user, password);
@@ -65,29 +92,16 @@ public class PersonneController{
 		return liste;
 	}
 
-	public List<Personne> getEtudiantBMC(String mc) {
-		// TODO Auto-generated method stub
-		List<Personne>l=new ArrayList<Personne>();
-		for(Personne e :liste)
-			if(e.getNom().contains(mc))
-				l.add(e);
-		return l;
-	}
-
-	public void trierEtudiantParNom() {
-		liste.sort((a,b)->a.getNom().compareTo(b.getNom()));
+	public void supprimerPersonne(int id) {
 		
-	}
-
-	public void supprimerEtudiant(int id) {
-		
+		List<Personne> liste = getAllPersonnes();
 		for(Iterator<Personne>i=liste.iterator();i.hasNext();)
 		{
 			Personne e=i.next();
 			if(e.getId()==id)
-				i.remove();
+				// supprimer de la base BD celui qui a cette id
+				System.out.println("Suppression effectuée");
 		}
-		
-	}
 
+	}
 }
