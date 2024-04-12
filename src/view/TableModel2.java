@@ -8,9 +8,9 @@ import javax.swing.table.AbstractTableModel;
 import model.Immeuble;
 import model.Personne;
 
-public class TableModel extends AbstractTableModel{
+public class TableModel2 extends AbstractTableModel{
 	
-	private List<Personne> liste = new ArrayList<>();
+	private List<Immeuble> liste = new ArrayList<>();
 	private String[] titres = {"ID", "Nom de l'immeuble"};
 	
 	
@@ -37,10 +37,10 @@ public class TableModel extends AbstractTableModel{
 		return titres[column];
 	}
 	
-	public void charger(List<Personne> liste) {
+	public void charger(List<Immeuble> liste) {
 		this.liste=liste;
 		fireTableDataChanged();
 	}
-
 }
+
 

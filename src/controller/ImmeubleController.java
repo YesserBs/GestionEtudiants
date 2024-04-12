@@ -1,38 +1,36 @@
 package controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-
+import model.Immeuble;
 import model.Personne;
 
-public class PersonneController{
+public class ImmeubleController {
 	
 	String url = "jdbc:mysql://localhost:3307/test?useSSL=false&requireSSL=true";
 	String user = "root"; // Nom d'utilisateur MySQL
-    String password = "admin"; // Mot de passe MySQL
+    String password = "admin"; // Mot de passe MySrQL
     
     Connection conn = null;
     PreparedStatement stmt = null;
-
-
-    public void ajouterPersonne(Personne e) {
+    
+    public void ajouterImmeuble(Immeuble e) {
 	    try {
 
 	        // Établir la connexion à la base de données
 	        conn = DriverManager.getConnection(url, user, password);
 
 	        // Préparer la requête SQL
-	        String sql = "INSERT INTO personne (nom, age) VALUES (?, ?)";
+	        String sql = "INSERT INTO locataires.immeuble (nom) VALUES (?)";
 	        stmt = conn.prepareStatement(sql);
 	        stmt.setString(1, e.getNom());
-	        stmt.setInt(2, e.getAge());
 
 	        // Exécuter la requête
 	        stmt.executeUpdate();
@@ -50,16 +48,13 @@ public class PersonneController{
 	}
 
 
-	public List<Personne> getAllPersonnes() {
-		List<Personne> liste=new ArrayList<Personne>();
+	public List<Immeuble> getAllImmeubles() {
+		List<Immeuble> liste=new ArrayList<Immeuble>();
 	    ResultSet rs = null;
 	    try {
-
-	        // Établir la connexion à la base de données
 	        conn = DriverManager.getConnection(url, user, password);
 
-	        // Préparer la requête SQL
-	        String sql = "SELECT id, nom, age FROM personne";
+	        String sql = "SELECT id, nom FROM locataires.immeuble";
 	        stmt = conn.prepareStatement(sql);
 
 	        // Exécuter la requête
@@ -69,9 +64,8 @@ public class PersonneController{
 	        while (rs.next()) {
 	            int id = rs.getInt("id");
 	            String nom = rs.getString("nom");
-	            int age = rs.getInt("age");
-	            Personne personne = new Personne(id, nom, age);
-	            liste.add(personne);
+	            Immeuble immeuble = new Immeuble(id, nom);
+	            liste.add(immeuble);
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -88,14 +82,12 @@ public class PersonneController{
 		return liste;
 	}
 
-	public void supprimerPersonne(int id) {
+	public void supprimerImmeuble(int id) {
 		try {
-	        // Charger le driver JDBC
-	        Class.forName("votre.driver.jdbc");
 	        conn = DriverManager.getConnection(url, user, password);
 
 	        // Préparer la requête SQL
-	        String sql = "DELETE FROM personne WHERE id = ?";
+	        String sql = "DELETE FROM locataires.immeuble WHERE id = ?";
 	        stmt = conn.prepareStatement(sql);
 	        stmt.setInt(1, id);
 
@@ -108,7 +100,7 @@ public class PersonneController{
 	        } else {
 	            System.out.println("Aucune personne avec l'ID spécifié trouvée dans la base de données.");
 	        }
-	    } catch (SQLException | ClassNotFoundException ex) {
+	    } catch (SQLException ex) {
 	        ex.printStackTrace();
 	    } finally {
 	        // Fermer les ressources
