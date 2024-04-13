@@ -38,7 +38,7 @@ public class Acceuil extends JFrame{
 		super("gestion des etudiants");
 		model.charger(immeubleC.getAllImmeubles());
         setVisible(true);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 		
         tableau.addMouseListener(new MouseAdapter() {
@@ -54,9 +54,20 @@ public class Acceuil extends JFrame{
         });
         
 		b_ajouter.addActionListener(e -> {
-			System.out.println("Hello");
+			/*
 			immeubleC.ajouterImmeuble(new Immeuble(0, "Nouvel immeuble"));
 			model.charger(immeubleC.getAllImmeubles());
+			*/
+        	int lastRowIndex = tableau.getRowCount() - 1;
+        	int RealId;
+        	if (model.getRowCount()!=0) {
+        		RealId = (int) model.getValueAt(lastRowIndex, 0);
+        		System.out.println(RealId);
+        	}
+        	else {
+        		RealId = 1;
+        	}
+			Saisie_nouvel_immeuble pop_up = new Saisie_nouvel_immeuble(RealId + 1);
 		});
 		
 		b_supprimer.addActionListener(x->{

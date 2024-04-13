@@ -8,6 +8,10 @@ public class Immeuble {
 		this.id = id;
 		this.nom = nom;
 	}
+	
+	public Immeuble(String nom) {
+		this.nom = nom;
+	}
 
 	public int getId() {
 		return id;
