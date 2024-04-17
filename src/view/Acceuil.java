@@ -13,13 +13,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
+import controller.AppartementController;
 import controller.ImmeubleController;
 import controller.PersonneController;
 import model.Immeuble;
 import model.Personne;
 
 public class Acceuil extends JFrame{
+	private int nombre;
+	
 	ImmeubleController immeubleC = new ImmeubleController();
+	AppartementController appartementC = new AppartementController();
 	
 	TableModel2 model = new TableModel2();
 	JTable tableau = new JTable(model);
@@ -34,8 +38,13 @@ public class Acceuil extends JFrame{
 	JPanel for_center = new JPanel();
 	JPanel for_distance = new JPanel(new BorderLayout());
 	
-	public Acceuil() {
+	public Acceuil(int nombre) {
 		super("gestion des etudiants");
+		this.nombre = nombre;
+		if (nombre > 0) {
+			appartementC.ajouterApparts(nombre);
+		}
+		
 		model.charger(immeubleC.getAllImmeubles());
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -58,16 +67,7 @@ public class Acceuil extends JFrame{
 			immeubleC.ajouterImmeuble(new Immeuble(0, "Nouvel immeuble"));
 			model.charger(immeubleC.getAllImmeubles());
 			*/
-        	int lastRowIndex = tableau.getRowCount() - 1;
-        	int RealId;
-        	if (model.getRowCount()!=0) {
-        		RealId = (int) model.getValueAt(lastRowIndex, 0);
-        		System.out.println(RealId);
-        	}
-        	else {
-        		RealId = 1;
-        	}
-			Saisie_nouvel_immeuble pop_up = new Saisie_nouvel_immeuble(RealId + 1);
+			Saisie_nouvel_immeuble pop_up = new Saisie_nouvel_immeuble();
 		});
 		
 		b_supprimer.addActionListener(x->{

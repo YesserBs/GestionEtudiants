@@ -13,24 +13,19 @@ import java.sql.SQLException;
 import model.Personne;
 
 public class PersonneController{
-	
-	String url = "jdbc:mysql://localhost:3307/test?useSSL=false&requireSSL=true";
-	String user = "root"; // Nom d'utilisateur MySQL
-    String password = "admin"; // Mot de passe MySQL
-    
-    Connection conn = null;
+
     PreparedStatement stmt = null;
+    private Connection cnx;
 
 
     public void ajouterPersonne(Personne e) {
 	    try {
 
 	        // Établir la connexion à la base de données
-	        conn = DriverManager.getConnection(url, user, password);
-
+	    	cnx=SingletonConnection.getInstance();
 	        // Préparer la requête SQL
 	        String sql = "INSERT INTO personne (nom, age) VALUES (?, ?)";
-	        stmt = conn.prepareStatement(sql);
+	        stmt = cnx.prepareStatement(sql);
 	        stmt.setString(1, e.getNom());
 	        stmt.setInt(2, e.getAge());
 
@@ -42,7 +37,7 @@ public class PersonneController{
 	        // Fermer les ressources
 	        try {
 	            if (stmt != null) stmt.close();
-	            if (conn != null) conn.close();
+	            if (cnx != null) cnx.close();
 	        } catch (SQLException ex) {
 	            ex.printStackTrace();
 	        }
@@ -56,11 +51,11 @@ public class PersonneController{
 	    try {
 
 	        // Établir la connexion à la base de données
-	        conn = DriverManager.getConnection(url, user, password);
+	    	cnx=SingletonConnection.getInstance();
 
 	        // Préparer la requête SQL
 	        String sql = "SELECT id, nom, age FROM personne";
-	        stmt = conn.prepareStatement(sql);
+	        stmt = cnx.prepareStatement(sql);
 
 	        // Exécuter la requête
 	        rs = stmt.executeQuery();
@@ -80,7 +75,7 @@ public class PersonneController{
 	        try {
 	            if (rs != null) rs.close();
 	            if (stmt != null) stmt.close();
-	            if (conn != null) conn.close();
+	            if (cnx != null) cnx.close();
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
@@ -90,13 +85,12 @@ public class PersonneController{
 
 	public void supprimerPersonne(int id) {
 		try {
-	        // Charger le driver JDBC
-	        Class.forName("votre.driver.jdbc");
-	        conn = DriverManager.getConnection(url, user, password);
+
+	    	cnx=SingletonConnection.getInstance();
 
 	        // Préparer la requête SQL
 	        String sql = "DELETE FROM personne WHERE id = ?";
-	        stmt = conn.prepareStatement(sql);
+	        stmt = cnx.prepareStatement(sql);
 	        stmt.setInt(1, id);
 
 	        // Exécuter la requête
@@ -108,13 +102,13 @@ public class PersonneController{
 	        } else {
 	            System.out.println("Aucune personne avec l'ID spécifié trouvée dans la base de données.");
 	        }
-	    } catch (SQLException | ClassNotFoundException ex) {
+	    } catch (SQLException ex) {
 	        ex.printStackTrace();
 	    } finally {
 	        // Fermer les ressources
 	        try {
 	            if (stmt != null) stmt.close();
-	            if (conn != null) conn.close();
+	            if (cnx != null) cnx.close();
 	        } catch (SQLException ex) {
 	            ex.printStackTrace();
 	        }

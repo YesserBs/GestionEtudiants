@@ -14,37 +14,25 @@ import model.Personne;
 
 public class ImmeubleController {
 	
-	String url = "jdbc:mysql://localhost:3307/test?useSSL=false&requireSSL=true";
-	String user = "root"; // Nom d'utilisateur MySQL
-    String password = "admin"; // Mot de passe MySrQL
-    
-    Connection conn = null;
+	private Connection cnx;
     PreparedStatement stmt = null;
     
     public void ajouterImmeuble(Immeuble e) {
 	    try {
 
 	        // Établir la connexion à la base de données
-	        conn = DriverManager.getConnection(url, user, password);
+	    	cnx=SingletonConnection.getInstance();
 
 	        // Préparer la requête SQL
 	        String sql = "INSERT INTO locataires.immeuble (nom) VALUES (?)";
-	        stmt = conn.prepareStatement(sql);
+	        stmt = cnx.prepareStatement(sql);
 	        stmt.setString(1, e.getNom());
 
 	        // Exécuter la requête
 	        stmt.executeUpdate();
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
-	    } finally {
-	        // Fermer les ressources
-	        try {
-	            if (stmt != null) stmt.close();
-	            if (conn != null) conn.close();
-	        } catch (SQLException ex) {
-	            ex.printStackTrace();
-	        }
-	    }
+	    } 
 	}
 
 
@@ -52,10 +40,10 @@ public class ImmeubleController {
 		List<Immeuble> liste=new ArrayList<Immeuble>();
 	    ResultSet rs = null;
 	    try {
-	        conn = DriverManager.getConnection(url, user, password);
+	    	cnx=SingletonConnection.getInstance();
 
 	        String sql = "SELECT id, nom FROM locataires.immeuble";
-	        stmt = conn.prepareStatement(sql);
+	        stmt = cnx.prepareStatement(sql);
 
 	        // Exécuter la requête
 	        rs = stmt.executeQuery();
@@ -69,26 +57,41 @@ public class ImmeubleController {
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	    } finally {
-	        // Fermer les ressources
-	        try {
-	            if (rs != null) rs.close();
-	            if (stmt != null) stmt.close();
-	            if (conn != null) conn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
 	    }
 		return liste;
+	}
+	
+	public Immeuble selectionnerDernier() {
+		Immeuble immeuble = null;
+	    ResultSet rs = null;
+	    try {
+	    	cnx=SingletonConnection.getInstance();
+
+	        String sql = "SELECT id, nom FROM locataires.immeuble ORDER BY id DESC LIMIT 1";
+	        stmt = cnx.prepareStatement(sql);
+
+	        // Exécuter la requête
+	        rs = stmt.executeQuery();
+
+	        // S'il y a des résultats, récupérer le dernier enregistrement
+	        if (rs.next()) {
+	            int id = rs.getInt("id");
+	            String nom = rs.getString("nom");
+	            immeuble = new Immeuble(id, nom);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } 
+	    return immeuble;
 	}
 
 	public void supprimerImmeuble(int id) {
 		try {
-	        conn = DriverManager.getConnection(url, user, password);
+	    	cnx=SingletonConnection.getInstance();
 
 	        // Préparer la requête SQL
 	        String sql = "DELETE FROM locataires.immeuble WHERE id = ?";
-	        stmt = conn.prepareStatement(sql);
+	        stmt = cnx.prepareStatement(sql);
 	        stmt.setInt(1, id);
 
 	        // Exécuter la requête
@@ -102,14 +105,6 @@ public class ImmeubleController {
 	        }
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
-	    } finally {
-	        // Fermer les ressources
-	        try {
-	            if (stmt != null) stmt.close();
-	            if (conn != null) conn.close();
-	        } catch (SQLException ex) {
-	            ex.printStackTrace();
-	        }
-	    }
+	    } 
 	}
 }

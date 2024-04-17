@@ -34,7 +34,7 @@ public class Saisie_nouvel_immeuble extends JFrame {
 		JButton bcontinuer = new JButton("Continuer");
 		JButton bannuler = new JButton("annuler");
 
-	    public Saisie_nouvel_immeuble(int id) {
+	    public Saisie_nouvel_immeuble() {
 	        super("Ajout immeuble");
 	        setLocationRelativeTo(null);
 	        bcontinuer.addActionListener(new ActionListener() {
@@ -43,16 +43,11 @@ public class Saisie_nouvel_immeuble extends JFrame {
 	            	nom = tfnom.getText();
 	            	n = tfnombre.getText();
 	            	int n_entier = Integer.parseInt(n);
-	            	System.out.println(n_entier);
 	            	// ===> Ajouter des données a la BD
-	            	System.out.println("Traitment de " + nom + n_entier);
 	            	ImmeubleController immeubleC = new ImmeubleController();
-	            	AppartementController appartementC = new AppartementController();
-	            	
 	            	immeubleC.ajouterImmeuble(new Immeuble(nom));
 	            	fermerToutesLesFenetres();
-	            	appartementC.ajouterApparts(id, n_entier);
-	            	new Acceuil();
+	            	new Acceuil(n_entier);
 	            }
 	        });
 	        
