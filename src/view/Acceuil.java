@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -48,7 +49,7 @@ public class Acceuil extends JFrame{
 		model.charger(immeubleC.getAllImmeubles());
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocation(390, 200);
 		
         tableau.addMouseListener(new MouseAdapter() {
             @Override
@@ -56,7 +57,9 @@ public class Acceuil extends JFrame{
                 if (e.getClickCount() == 2) {
                     int row = tableau.rowAtPoint(e.getPoint());
                     if (row != -1) { 
-                        JOptionPane.showMessageDialog(null, "Ouvrir l'immeuble " + row);
+                        //JOptionPane.showMessageDialog(null, "Ouvrir l'immeuble " + row);
+                        fermerToutesLesFenetres();
+                        new Fenetre_appartements((int) model.getValueAt(row, 0));
                     }
                 }
             }
@@ -104,4 +107,11 @@ public class Acceuil extends JFrame{
 		
 		pack();
 	}
+	
+    private void fermerToutesLesFenetres() {
+        Window[] fenetres = JFrame.getWindows();
+        for (Window fenetre : fenetres) {
+            fenetre.dispose();
+        }
+    }
 }

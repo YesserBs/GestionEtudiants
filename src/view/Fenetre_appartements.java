@@ -26,6 +26,8 @@ public class Fenetre_appartements extends JFrame{
 	JTable tableau = new JTable(model);
 	JScrollPane jsp = new JScrollPane(tableau);
 	
+	JButton retour = new JButton("retour");
+	
 	JLabel l_immeubles = new JLabel("Appartements");
 	JPanel p1 = new JPanel(new BorderLayout());
 	JPanel p2 = new JPanel(new BorderLayout());
@@ -41,7 +43,7 @@ public class Fenetre_appartements extends JFrame{
 		
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocation(390, 200);
 		
         tableau.addMouseListener(new MouseAdapter() {
             @Override
@@ -54,7 +56,13 @@ public class Fenetre_appartements extends JFrame{
                 }
             }
         });
+        
+        retour.addActionListener(x->{
+            this.setVisible(false); // Rend la fenêtre actuelle invisible
+            new Acceuil(-1).setVisible(true); // Crée et affiche une nouvelle fenêtre
+        });
 		
+        for_center.add(retour);
 		for_center.add(l_immeubles);
 		p1.add(for_center, BorderLayout.NORTH);
 		p1.add(jsp, BorderLayout.CENTER);
@@ -62,9 +70,5 @@ public class Fenetre_appartements extends JFrame{
 		add(p1);
 		
 		pack();
-	}
-	
-	public static void main(String[] args) {
-		new Fenetre_appartements(79);
 	}
 }
