@@ -4,54 +4,111 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Fenetre_paiements extends JFrame {
+    // Déclaration des composants en haut de la classe
+    JButton retourButton = new JButton("Retour");
+    JLabel appartementLabel = new JLabel("Appartement numero 5");
+    JLabel remarques = new JLabel("Remarques:");
+    JTextArea textArea = new JTextArea(5, 20);
+    JScrollPane scrollPaneText = new JScrollPane(textArea); 
+    String[] columnNames = {"Colonne 1", "Colonne 2"};
+    Object[][] data = {
+        {"Donnée 1", "Donnée 2"},
+        {"Donnée 3", "Donnée 4"},
+        {"Donnée 1", "Donnée 2"},
+        {"Donnée 3", "Donnée 4"},
+        {"Donnée 1", "Donnée 2"},
+        {"Donnée 3", "Donnée 4"},
+        {"Donnée 1", "Donnée 2"},
+        {"Donnée 3", "Donnée 4"},
+        {"Donnée 1", "Donnée 2"},
+        {"Donnée 3", "Donnée 4"},
+        {"Donnée 1", "Donnée 2"},
+        {"Donnée 3", "Donnée 4"},
+        {"Donnée 1", "Donnée 2"},
+        {"Donnée 3", "Donnée 4"},
+        {"Donnée 1", "Donnée 2"},
+        {"Donnée 3", "Donnée 4"},
+        {"Donnée 1", "Donnée 2"},
+        {"Donnée 3", "Donnée 4"},
+        {"Donnée 1", "Donnée 2"},
+        {"Donnée 3", "Donnée 4"},
+        {"Donnée 1", "Donnée 2"},
+        {"Donnée 3", "Donnée 4"}
+    };
+    JTable table = new JTable(data, columnNames);
+    JScrollPane scrollPaneTable = new JScrollPane(table);
+    JTextArea remarquesArea = new JTextArea(10, 20);
+    JScrollPane scrollPaneRemarques = new JScrollPane(remarquesArea); 
+    JPanel topPanel = new JPanel();
+    JPanel centerPanel = new JPanel(new BorderLayout());
+    JPanel remarquesPanel = new JPanel(new BorderLayout());
+    
+    JPanel p12 = new JPanel();
+    JButton bajouter = new JButton("Ajouter");
+    JButton bsupprimer = new JButton("Supprimer");
+    JLabel lRecherche = new JLabel("Recharcher par date");
+    
+    JPanel pLower = new JPanel(new BorderLayout());
+    JPanel buttonAndTablePanel = new JPanel(new BorderLayout());
+    JTextField textField = new JTextField(10);
+    JButton rechercher = new JButton("rechercher");
+
     public Fenetre_paiements() {
         setTitle("Appartement numero 5");
-        setSize(670, 500);
+        setSize(669, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Création du bouton "retour"
-        JButton retourButton = new JButton("Retour");
-
-        // Création du label "Appartement numero 5"
-        JLabel appartementLabel = new JLabel("Appartement numero 5");
-
-        // Création du texte scrollable
-        JTextArea textArea = new JTextArea(5, 20);
-        textArea.setText("Insérez ici le long texte que vous souhaitez afficher."); // Ajoute du texte
+        // Configuration du texte scrollable
+        textArea.setText("Porchain paiement dans 24 jours\nAucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler Aucun problème a signaler"); // Ajoute du texte
         textArea.setEditable(false); // Rend le JTextArea non modifiable
-        JScrollPane scrollPaneText = new JScrollPane(textArea); 
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         scrollPaneText.setMinimumSize(new Dimension(0, 100)); // Définit la hauteur minimale à 100
 
-        // Création du tableau scrollable
-        String[] columnNames = {"Colonne 1", "Colonne 2"};
-        Object[][] data = {
-            {"Donnée 1", "Donnée 2"},
-            {"Donnée 3", "Donnée 4"}
-        };
-        JTable table = new JTable(data, columnNames);
-        JScrollPane scrollPaneTable = new JScrollPane(table);
+        // Ajout des composants au layout du haut
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        topPanel.add(retourButton);
+        topPanel.add(Box.createHorizontalGlue());
+        topPanel.add(appartementLabel);
+        topPanel.add(Box.createHorizontalGlue());
+        topPanel.add(Box.createHorizontalGlue());
 
-        // Ajout des composants au layout
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        leftPanel.add(retourButton);
-        leftPanel.add(appartementLabel);
-        leftPanel.add(scrollPaneText);
-        leftPanel.add(scrollPaneTable);
+        // Ajoutez le JTextField en haut
+        JPanel pTextField = new JPanel();
+        pTextField.add(lRecherche);
+        pTextField.add(textField);
+        pTextField.add(rechercher);
+        buttonAndTablePanel.add(pTextField, BorderLayout.NORTH);
 
-        // Création du JTextArea pour les remarques
-        JTextArea remarquesArea = new JTextArea(10, 20);
-        JScrollPane scrollPaneRemarques = new JScrollPane(remarquesArea); 
+        // Ajoutez le tableau au centre
+        buttonAndTablePanel.add(scrollPaneTable, BorderLayout.CENTER);
+
+        // Ajout des boutons en bas
+        p12.add(bajouter);
+        p12.add(bsupprimer);
+        buttonAndTablePanel.add(p12, BorderLayout.SOUTH);
+
+        // Maintenant, ajoutez buttonAndTablePanel à pLower
+        pLower.add(buttonAndTablePanel, BorderLayout.CENTER);
+
+        // Ajout des composants au layout du centre
+        centerPanel.add(scrollPaneText, BorderLayout.NORTH);
+        centerPanel.add(pLower, BorderLayout.CENTER);
+
+        // Configuration du JTextArea pour les remarques
         remarquesArea.setLineWrap(true);
         remarquesArea.setWrapStyleWord(true);
 
+        // Ajout des composants au JPanel pour les remarques
+        remarquesPanel.add(remarques, BorderLayout.NORTH);
+        remarquesPanel.add(scrollPaneRemarques, BorderLayout.CENTER);
+
         // Ajout des JPanel au layout principal
         setLayout(new BorderLayout());
-        add(leftPanel, BorderLayout.WEST);
-        add(scrollPaneRemarques, BorderLayout.EAST);
+        add(topPanel, BorderLayout.NORTH);
+        add(centerPanel, BorderLayout.CENTER);
+        add(remarquesPanel, BorderLayout.EAST);
     }
 
     public static void main(String[] args) {
