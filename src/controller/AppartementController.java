@@ -26,8 +26,8 @@ public class AppartementController {
 	        for (int i = 1; i<=nombre; i++) {
 		        String sql = "INSERT INTO locataires.appartement (id, id_immeuble, remarques) VALUES (?, ?, 'Remarques');";
 		        stmt = cnx.prepareStatement(sql);
-		        stmt.setInt(1, id);
-		        stmt.setInt(2, i);
+		        stmt.setInt(1, i);
+		        stmt.setInt(2, id);
 		        stmt.executeUpdate();
 	        }
 	    } catch (SQLException ex) {
@@ -41,14 +41,14 @@ public class AppartementController {
 	    try {
 	    	cnx=SingletonConnection.getInstance();
 
-	        String sql = "SELECT * FROM locataires.appartement WHERE id = ?";
+	        String sql = "SELECT * FROM locataires.appartement WHERE id_immeuble = ?";
 	        stmt = cnx.prepareStatement(sql);
 	        stmt.setInt(1, n);
 
 	        rs = stmt.executeQuery();
 
 	        while (rs.next()) {
-	            int id = rs.getInt("id_immeuble");
+	            int id = rs.getInt("id");
 	            Appartement immeuble = new Appartement(id);
 	            liste.add(immeuble);
 	        }
@@ -56,5 +56,64 @@ public class AppartementController {
 	        e.printStackTrace();
 	    }
 		return liste;
+	}
+
+    public String getNomImmeuble(int id) {
+        String nom = null;
+        ResultSet rs = null;
+        try {
+            cnx = SingletonConnection.getInstance();
+
+            String sql = "SELECT nom FROM locataires.immeuble WHERE id = ?";
+            stmt = cnx.prepareStatement(sql);
+            stmt.setInt(1, id);
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                nom = rs.getString("nom");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nom;
+    }
+
+	public String getRemarques(int id_immeuble, int id_appartement) {
+        String remarques = null;
+        ResultSet rs = null;
+        try {
+            cnx = SingletonConnection.getInstance();
+
+            String sql = "SELECT remarques FROM locataires.appartement WHERE id = ? and id_immeuble = ?";
+            stmt = cnx.prepareStatement(sql);
+            stmt.setInt(1, id_appartement);
+            stmt.setInt(2, id_immeuble);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+            	remarques = rs.getString("remarques");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return remarques;
+	}
+	
+	
+	public void setRemarques(int id_immeuble, int id_appartement, String remarques) {
+        try {
+            cnx = SingletonConnection.getInstance();
+
+            String sql = "UPDATE locataires.appartement SET remarques = ? WHERE id = ? and id_immeuble = ?";
+            stmt = cnx.prepareStatement(sql);
+            stmt.setString(1, remarques);
+            stmt.setInt(2, id_appartement);
+            stmt.setInt(3, id_immeuble);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 	}
 }

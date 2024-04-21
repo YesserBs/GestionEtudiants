@@ -19,8 +19,6 @@ public class ImmeubleController {
     
     public void ajouterImmeuble(Immeuble e) {
 	    try {
-
-	        // Établir la connexion à la base de données
 	    	cnx=SingletonConnection.getInstance();
 
 	        // Préparer la requête SQL

@@ -43,7 +43,6 @@ public class Saisie_nouvel_immeuble extends JFrame {
 	            	nom = tfnom.getText();
 	            	n = tfnombre.getText();
 	            	int n_entier = Integer.parseInt(n);
-	            	// ===> Ajouter des données a la BD
 	            	ImmeubleController immeubleC = new ImmeubleController();
 	            	immeubleC.ajouterImmeuble(new Immeuble(nom));
 	            	fermerToutesLesFenetres();
