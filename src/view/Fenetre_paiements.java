@@ -20,7 +20,7 @@ public class Fenetre_paiements extends JFrame {
 	
     // Déclaration des composants en haut de la classe
     JButton retourButton = new JButton("Retour");
-    JLabel appartementLabel = new JLabel("Appartement numero 5");
+    JLabel appartementLabel;
     JLabel remarques = new JLabel("Remarques:");
     JTextArea textArea = new JTextArea(5, 20);
     JScrollPane scrollPaneText = new JScrollPane(textArea); 
@@ -62,13 +62,30 @@ public class Fenetre_paiements extends JFrame {
         });
         
         bajouter.addActionListener(x->{
-            new Saisie_nouveau_paiement();
+            new Saisie_nouveau_paiement(id_immeuble, id);
         });
         
         b_enregistrer.addActionListener(x->{
         	appartementC.setRemarques(id_immeuble, id, remarquesArea.getText());
         });
+        
+		bsupprimer.addActionListener(x->{
+			int index = table.getSelectedRow();
+			if (index == -1) {
+				JOptionPane.showMessageDialog(this, "selcetionnez une ligne");
+			}
+			else {
+				int res = JOptionPane.showConfirmDialog(this, "voulez vous supprimer cet etudiant?", "confirmation", JOptionPane.YES_NO_OPTION);
+				
+				if (res==0) {
+					int IDrow = (int) model.getValueAt(index, 0);
+					paiementC.supprimerPaiement(IDrow, id_immeuble, id);
+					model.charger(paiementC.getAllPaiements(id_immeuble, id));
+				}
+			}
+		});
 
+		appartementLabel  = new JLabel("Appartement numero " + id);
         // Ajout de la marge au bouton "Retour"
         JPanel retourButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         retourButtonPanel.setBorder(new EmptyBorder(3, 3, 0, 180)); // Ajoute une marge en haut et à gauche

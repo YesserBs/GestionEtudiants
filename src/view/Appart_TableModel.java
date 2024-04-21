@@ -11,7 +11,7 @@ import model.Immeuble;
 public class Appart_TableModel extends AbstractTableModel{
 	
 	private List<Appartement> liste = new ArrayList<>();
-	private String[] titres = {"ID", "Dernier payment"};
+	private String[] titres = {"Numéro", "Nom du locataire", "Dernier payment"};
 	
 	
 	@Override
@@ -28,7 +28,8 @@ public class Appart_TableModel extends AbstractTableModel{
 	public Object getValueAt(int l, int c) {
 		switch(c) {
 		case 0: return liste.get(l).getId();
-		case 1: return liste.get(l).getPayement();
+		case 1: return liste.get(l).getDernierLocataire();
+		case 2: return liste.get(l).getStatus();
 		}
 		return null;
 	}

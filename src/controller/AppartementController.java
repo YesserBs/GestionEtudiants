@@ -10,9 +10,11 @@ import java.util.List;
 
 import model.Appartement;
 import model.Immeuble;
+import model.Paiement;
 
 public class AppartementController {
 	
+	PaiementController paiementC = new PaiementController();
 	ImmeubleController immeubleC = new ImmeubleController();
 	
 	private Connection cnx;
@@ -49,8 +51,20 @@ public class AppartementController {
 
 	        while (rs.next()) {
 	            int id = rs.getInt("id");
-	            Appartement immeuble = new Appartement(id);
-	            liste.add(immeuble);
+	            Paiement p = paiementC.getDernier(n, id);
+
+
+
+	            
+	            Appartement appart = new Appartement(id);
+	            if (p != null) {
+	            	appart.setDernierLocataire(p.getNom_loc(), p.getPrenom_loc());
+	            	appart.setDernierPaiement(p.getPaye_le());
+	            }
+	            else {
+	            	appart.setDernierLocataire("-vide-", "");
+	            }
+	            liste.add(appart);
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
