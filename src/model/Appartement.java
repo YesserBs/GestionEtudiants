@@ -64,7 +64,11 @@ public class Appartement {
 	    if (dernier_paiement != null) {
 	        long diffInMillies = Math.abs(new Date().getTime() - dernier_paiement.getTime());
 	        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-	        return "il y a " + diff + " jours";
+	        if (diff > 0) {
+		        return "il y a " + diff + " jours";
+	        }else {
+		        return "déja payé";
+	        }
 		}else {
 	        return "-vide-";
 	    }

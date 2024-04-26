@@ -5,8 +5,13 @@ import javax.swing.*;
 import com.toedter.calendar.JDateChooser;
 
 import controller.PaiementController;
+import model.Paiement;
 
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Saisie_nouveau_paiement extends JFrame {
@@ -46,7 +51,11 @@ public class Saisie_nouveau_paiement extends JFrame {
             Date payeLeDate = paye_leField.getDate();
             Date supposeLeDate = suppose_leField.getDate();
             
-            System.out.println("Nom: " + nomContent);System.out.println("Prenom: " + prenomContent);System.out.println("Loyer: " + loyerContent);System.out.println("Supposé payé le: " + supposeLeDate);System.out.println("Payé le: " + payeLeDate);
+            if(nomContent.isEmpty() || prenomContent.isEmpty() || loyerContent.isEmpty() || payeLeDate == null || supposeLeDate == null) {
+                JOptionPane.showMessageDialog(null, "Les champs ne doivent pas être vides");
+                return;
+            }
+            
             try {
                 int loyerContentInt = Integer.parseInt(loyerContent);
                 paiementC.ajouterPaiement(id_immeuble, id_appartement, nomContent, prenomContent, loyerContentInt, payeLeDate, supposeLeDate);
@@ -57,8 +66,29 @@ public class Saisie_nouveau_paiement extends JFrame {
             }
         });
         
+        Paiement paiement = paiementC.getDernier(id_immeuble, id_appartement);
+        if (paiement != null) {
+        	nomField.setText(paiement.getNom_loc());
+        	prenomField.setText(String.valueOf(paiement.getPrenom_loc())); //getPrenom_loc() doit etre String
+        	loyerField.setText(String.valueOf(paiement.getLoyer())); //paiement.getLoyer() doit etre String
+            
+            java.util.Date date = new java.util.Date(paiement.getSuppose_le().getTime());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.add(Calendar.MONTH, 1);
+            date = cal.getTime();
+
+            suppose_leField.setDate(date);
+        }
+        
+        
         annuler.addActionListener(x->{
             dispose();
+        });
+        
+        vider.addActionListener(x->{
+            dispose();
+            new Saisie_nouveau_vidage(id_immeuble, id_appartement);
         });
 
         p.add(nom);

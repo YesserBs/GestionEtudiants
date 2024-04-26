@@ -26,7 +26,7 @@ public class AppartementController {
 	    	cnx=SingletonConnection.getInstance();
 	    	int id = immeubleC.selectionnerDernier().getId();
 	        for (int i = 1; i<=nombre; i++) {
-		        String sql = "INSERT INTO locataires.appartement (id, id_immeuble, remarques) VALUES (?, ?, 'Remarques');";
+		        String sql = "INSERT INTO locataires.appartement (id, id_immeuble, remarques) VALUES (?, ?, ' Ecrivez vos remarques ici!');";
 		        stmt = cnx.prepareStatement(sql);
 		        stmt.setInt(1, i);
 		        stmt.setInt(2, id);
@@ -52,9 +52,6 @@ public class AppartementController {
 	        while (rs.next()) {
 	            int id = rs.getInt("id");
 	            Paiement p = paiementC.getDernier(n, id);
-
-
-
 	            
 	            Appartement appart = new Appartement(id);
 	            if (p != null) {

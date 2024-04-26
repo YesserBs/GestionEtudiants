@@ -79,7 +79,7 @@ public class Acceuil extends JFrame{
 				JOptionPane.showMessageDialog(this, "selcetionnez une ligne");
 			}
 			else {
-				int res = JOptionPane.showConfirmDialog(this, "voulez vous supprimer cet etudiant?", "confirmation", JOptionPane.YES_NO_OPTION);
+				int res = JOptionPane.showConfirmDialog(this, "voulez vous supprimer cet immeuble?", "confirmation", JOptionPane.YES_NO_OPTION);
 				
 				if (res==0) {
 					int id = (int) model.getValueAt(index, 0);

@@ -84,22 +84,44 @@ public class ImmeubleController {
 	}
 
 	public void supprimerImmeuble(int id) {
-		try {
-	    	cnx=SingletonConnection.getInstance();
+	    try {
+	        cnx=SingletonConnection.getInstance();
 
-	        // Préparer la requête SQL
-	        String sql = "DELETE FROM locataires.immeuble WHERE id = ?";
-	        stmt = cnx.prepareStatement(sql);
+	        // Préparer la requête SQL pour supprimer les paiements
+	        String sqlPaiements = "DELETE FROM locataires.paiement WHERE id_immeuble = ?";
+	        stmt = cnx.prepareStatement(sqlPaiements);
 	        stmt.setInt(1, id);
 
 	        // Exécuter la requête
-	        int rowsAffected = stmt.executeUpdate();
-	        
+	        int rowsAffectedPaiements = stmt.executeUpdate();
+
+	        // Préparer la requête SQL pour supprimer les appartements
+	        String sqlAppartements = "DELETE FROM locataires.appartement WHERE id_immeuble = ?";
+	        stmt = cnx.prepareStatement(sqlAppartements);
+	        stmt.setInt(1, id);
+
+	        // Exécuter la requête
+	        int rowsAffectedAppartements = stmt.executeUpdate();
+
+	        // Préparer la requête SQL pour supprimer l'immeuble
+	        String sqlImmeuble = "DELETE FROM locataires.immeuble WHERE id = ?";
+	        stmt = cnx.prepareStatement(sqlImmeuble);
+	        stmt.setInt(1, id);
+
+	        // Exécuter la requête
+	        int rowsAffectedImmeuble = stmt.executeUpdate();
+
 	        // Vérifier si une ligne a été supprimée
-	        if (rowsAffected > 0) {
-	            System.out.println("Suppression effectuée");
-	        } else {
-	            System.out.println("Aucune personne avec l'ID spécifié trouvée dans la base de données.");
+	        if (rowsAffectedImmeuble <= 0) {
+	            System.out.println("Aucun immeuble avec l'ID spécifiée trouvé dans la base de données.");
+	        }
+
+	        if (rowsAffectedAppartements <= 0) {
+	            System.out.println("Aucun appartement avec l'ID d'immeuble spécifiée trouvé dans la base de données.");
+	        }
+
+	        if (rowsAffectedPaiements <= 0) {
+	            System.out.println("Aucun paiement avec l'ID d'immeuble spécifiée trouvé dans la base de données.");
 	        }
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();

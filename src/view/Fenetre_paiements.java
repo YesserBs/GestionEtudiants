@@ -5,8 +5,13 @@ import javax.swing.border.EmptyBorder;
 
 import controller.AppartementController;
 import controller.PaiementController;
+import model.Paiement;
 
 import java.awt.*;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
 public class Fenetre_paiements extends JFrame {
 	
@@ -22,7 +27,7 @@ public class Fenetre_paiements extends JFrame {
     JButton retourButton = new JButton("Retour");
     JLabel appartementLabel;
     JLabel remarques = new JLabel("Remarques:");
-    JTextArea textArea = new JTextArea(5, 20);
+    JLabel textArea = new JLabel();
     JScrollPane scrollPaneText = new JScrollPane(textArea); 
     //String[] columnNames = {"Colonne 1", "Colonne 2"};
     JTable table = new JTable(model);
@@ -36,11 +41,11 @@ public class Fenetre_paiements extends JFrame {
     JPanel p12 = new JPanel();
     JButton bajouter = new JButton("Ajouter");
     JButton bsupprimer = new JButton("Supprimer");
-    JLabel lRecherche = new JLabel("Recharcher par date");
+    JLabel lRecherche = new JLabel("Recharcher paiement");
     
     JPanel pLower = new JPanel(new BorderLayout());
     JPanel buttonAndTablePanel = new JPanel(new BorderLayout());
-    JTextField textField = new JTextField(10);
+    JTextField t_recherche = new JTextField(10);
     JButton rechercher = new JButton("rechercher");
     JPanel p_enregistrer = new JPanel();
     JButton b_enregistrer = new JButton("enregistrer remarques");
@@ -52,7 +57,7 @@ public class Fenetre_paiements extends JFrame {
     	remarquesArea.setText(appartementC.getRemarques(id_immeuble, id));
     	
         setTitle("Appartement numero 5");
-        setSize(669, 500);
+        setSize(710, 500);
         setLocation(390, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -75,7 +80,7 @@ public class Fenetre_paiements extends JFrame {
 				JOptionPane.showMessageDialog(this, "selcetionnez une ligne");
 			}
 			else {
-				int res = JOptionPane.showConfirmDialog(this, "voulez vous supprimer cet etudiant?", "confirmation", JOptionPane.YES_NO_OPTION);
+				int res = JOptionPane.showConfirmDialog(this, "voulez vous supprimer ce paiement?", "confirmation", JOptionPane.YES_NO_OPTION);
 				
 				if (res==0) {
 					int IDrow = (int) model.getValueAt(index, 0);
@@ -83,6 +88,10 @@ public class Fenetre_paiements extends JFrame {
 					model.charger(paiementC.getAllPaiements(id_immeuble, id));
 				}
 			}
+		});
+		
+		rechercher.addActionListener(x->{
+			model.charger(paiementC.rechercherParMC(t_recherche.getText(), id_immeuble, id));
 		});
 
 		appartementLabel  = new JLabel("Appartement numero " + id);
@@ -102,17 +111,37 @@ public class Fenetre_paiements extends JFrame {
         topPanel.add(appartementLabelPanel);
         topPanel.add(Box.createHorizontalGlue());
 
-        // Configuration du texte scrollable
-        textArea.setText("Porchain paiement dans 24 jours\nAucun problème a signaler"); // Ajoute du texte
-        textArea.setEditable(false); // Rend le JTextArea non modifiable
+        Paiement p = paiementC.getDernier(id_immeuble, id);
+        if (p != null) {
+            LocalDate today = LocalDate.now();
+            java.util.Date date = new java.util.Date(p.getPaye_le().getTime());
+            LocalDate paye_le = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            long daysBetween = ChronoUnit.DAYS.between(paye_le, today);
+            if (daysBetween == 0) {
+                textArea.setText("Payé aujourd'hui\n");
+            }else if(daysBetween < 0) {
+                textArea.setText("Payé en avance\n");
+            }
+            else {
+            	textArea.setText("Dèrnière fois payé il y a " + daysBetween + " jours\n");
+            }
+        } else {
+            textArea.setText("Aucun paiement pour le moment\n");
+        }
+        
+        /*
+        textArea.setEditable(false);
         textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
+        textArea.setWrapStyleWord(true);*/
+        EmptyBorder margin = new EmptyBorder(0, 20, 0, 0); // 10 pixels de marge à gauche
+
+	     // Appliquez la bordure à votre JLabel
+	     textArea.setBorder(margin);
         scrollPaneText.setMinimumSize(new Dimension(0, 100)); // Définit la hauteur minimale à 100
 
-        // Ajoutez le JTextField en haut
         JPanel pTextField = new JPanel();
         pTextField.add(lRecherche);
-        pTextField.add(textField);
+        pTextField.add(t_recherche);
         pTextField.add(rechercher);
         buttonAndTablePanel.add(pTextField, BorderLayout.NORTH);
 
